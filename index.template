@@ -1,0 +1,73 @@
+<html>
+<head>
+<title>Repurposing Android</title>
+<link rel="stylesheet" href="simple.css">
+</head>
+<body>
+<header>
+<h1>Repurposing Android smartphones</h1>
+<p>GNU/Linux-ish generic repurposing</p>
+</header>
+
+<h2>What is this project?</h2>
+
+<p>This project aims to make most (bootloader-unlockable) Android phones repurposable for the tinkerers that are more accostumed to GNU/Linux and shell.</p>
+
+<p>Your screen is broken? Repurpose your device as a monitor cam! Your camera is broken? Repurpose your device as a Home-Assistant frontend!<br/>
+Hopefully, in the future, we'll have a nice table of things you can do depending on what's broken or not</p>
+
+<h2>Components</h2>
+
+<p>There are mainly four components required for this:
+<ul>
+<li>A hosting Android ROM. <a href="https://github.com/phhusson/treble_experimentations/releases">One of my GSI (Generic System Image)</a> is the simplest solution for Android devices released with Oreo or more recent</li>
+<li><a href="https://github.com/phhusson/NetInterpreter">NetInterpreter</a> – This is an Android app that exposes all Android APIs (via introspection) over a localhost TCP socket.</li>
+<li><a href="https://hub.docker.com/_/ubuntu">An ubunty docker image as the GNU/Linux base</li>
+<li><a href="https://github.com/phhusson/NetInterpreter/tree/master/examples">NetInterpreter's shell library</a> is a set of shell scripts that call into NetInterpreter to control Android from the comfort of your own shell</li>
+<li><a href="https://github.com/phhusson/repurposer">A Dockerfile to construct the image plus a bunch of scripts to install on the hosting Android</a></li>
+</ul>
+</p>
+
+<h2>What does it look like once installed?</h2>
+
+<p>Once installed, you get a ssh server running in the GNU/Linux world. It does have various limitations, there is no actual init system (just put stuff in /etc/rc.local), you'll most likely need to run everything as root</p>
+
+<p>To access Android-controlled components, you can use the NetIntepreter's shell helper library. </p>
+
+<p><code>
+source /netinterpreter/examples/battery.sh<br/>
+batteryLevel # This will show the current battery level</code></p>
+
+<p>
+<code>
+source /netinterpreter/examples/power.sh<br/>
+wakelock phh # This will prevent the device from going into deep sleep, so you can keep doing stuff</code></p>
+
+<p><code>
+source /netinterpreter/examples/camera.sh<br/>
+picture # This will take a photo from back cam and store it in /android-shared/Android/data/me.phh.netinterpreter/cache/hello.jpg
+</code>
+</p>
+
+<h2>Hosting</h2>
+
+<p>This project is hosted on a ::smartphone::. Its current battery level is ::batterylevel::. </p>
+
+<p>This site is IPv6-only: the goal is to self-host on a smartphone, and my home internet connection's 80/443 is already in use. So yeah, in 2022, I won't fight to get this website an IPv4.</p>
+
+<p>The hosting ::smartphone:: is running from an usb-c solar cell, with an usb power pack in between. I have no idea how much load can this setup take without draining the battery, hopefully I won't have to find out.</p>
+
+<h2>Live photo</h2>
+<p>
+<img src="/hello.jpg" alt="Beautiful photo of my neighborhoud, refreshed every minute" style="width: 100%" />
+</p>
+
+<footer>
+<p>
+Made by <a href="https://github.com/phhusson/">phh</a>.<br/>
+Software stack is <a href="https://caddyserver.com/">Caddy</a> for https server + <a href="https://www.gnu.org/software/sed/">sed</a> for templating + <a href="https://simplecss.org/">simplecss</a> for CSS<br/>
+<a href="https://github.com/phhusson/treble_experimentations/releases">Phh-AOSP GSI</a> as hosting Android ROM
+</p>
+</footer>
+</body>
+</html>

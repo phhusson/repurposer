@@ -28,15 +28,10 @@ while true;do
 	cp /tmp/output3.jpg /http/output.jpg
 	mv -f /http/output.jpg /http/hello.jpg
 
-cat > /http/index.html <<EOF
-<html>
-<head><title>Good morning from \$smartphone</title></head>
-<body>
-smartphone=$oem $model<br/>
-batLevel=$batlevel<br/>
-<img src="/hello.jpg" alt="Beautiful photo of my neighborhoud, refresh every minute" />
-</body>
-</html>
-EOF
+	sed -e "s/::batterylevel::/$batlevel/g" /http/index.template |
+		sed -e "s/::smartphone::/$oem $model/g"	> /http/index.html.next
+	mv -f /http/index.html.next /http/index.html
+
 	sleep 60
 done
+
