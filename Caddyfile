@@ -1,0 +1,4 @@
+webcam.phh.me {
+	root * /http
+	file_server
+}

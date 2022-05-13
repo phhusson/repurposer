@@ -1,0 +1,42 @@
+source /netinterpreter/examples/battery.sh
+source /netinterpreter/examples/camera.sh
+source /netinterpreter/examples/power.sh
+source /netinterpreter/examples/wifi.sh
+source /netinterpreter/examples/prop.sh
+
+oem="$(getprop ro.product.vendor.brand)"
+model="$(getprop ro.product.vendor.model)"
+
+# Make a stamp
+msg="repurposer gsi on $oem $model"
+convert -size 600x72 \
+	xc:transparent -font NewCenturySchlbk-Italic -pointsize 32 \
+	-fill white -annotate +24+32 "$msg" \
+	-fill black -annotate +26+32 "$msg" \
+	stamp.png
+
+wakelock phh
+
+while true;do
+	batlevel=$(batteryLevel)
+	picture
+
+	convert -size 300x72 xc:transparent  -pointsize 18 -fill red -annotate +24+32 "$(date +"%Y-%m-%d %H:%M:%S")" timestamp.png
+	composite -gravity SouthEast stamp.png /android-shared/Android/data/me.phh.netinterpreter/cache/hello.jpg /tmp/output.jpg
+	composite -gravity SouthWest timestamp.png /tmp/output.jpg /tmp/output2.jpg
+	convert -resize 1280x720 /tmp/output2.jpg /tmp/output3.jpg
+	cp /tmp/output3.jpg /http/output.jpg
+	mv -f /http/output.jpg /http/hello.jpg
+
+cat > /http/index.html <<EOF
+<html>
+<head><title>Good morning from \$smartphone</title></head>
+<body>
+smartphone=$oem $model<br/>
+batLevel=$batlevel<br/>
+<img src="/hello.jpg" alt="Beautiful photo of my neighborhoud, refresh every minute" />
+</body>
+</html>
+EOF
+	sleep 60
+done

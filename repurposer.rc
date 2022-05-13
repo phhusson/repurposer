@@ -1,0 +1,3 @@
+service repurposer /system/bin/sh 
+	oneshot
+	seclabel u:r:phhsu_daemon:s0
