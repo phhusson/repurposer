@@ -3,6 +3,7 @@
 p="/data/unencrypted/repurposer"
 newhash=$(cat /data/unencrypted/repurposer.tar.gz.md5)
 
+setenforce 0
 
 # For maintainance purposes we might want repurposer not to start
 if [ -f /data/unencrypted/repurposer/stop ];then
